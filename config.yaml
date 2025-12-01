@@ -1,0 +1,8 @@
+model_name: distilgpt2
+batch_size: 64
+model:
+  embedding_dim: 16
+  hidden_dim: 16
+  n_layers: 1
+  dropout: 0.1
+  learning_rate: 0.001
