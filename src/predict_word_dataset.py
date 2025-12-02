@@ -20,4 +20,4 @@ class PredictWordDataset(Dataset):
 
     def __getitem__(self, index):
         x, y = self._samples[index]
-        return F.pad(torch.tensor(x), (self.max_len - len(x) - 1, 0), value=0), torch.tensor(y)
+        return F.pad(torch.tensor(x), (0, self.max_len - len(x) - 1), value=0), torch.tensor(y)
