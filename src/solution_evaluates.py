@@ -3,7 +3,7 @@ from attr.validators import max_len
 from rouge import Rouge
 from torch.utils.data import DataLoader
 from datasets import tqdm
-from src.generate import generate
+from src.solution_generates import generate
 
 
 def evaluate_f1(model, loader, criterion):
