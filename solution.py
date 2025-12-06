@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 from src.solution_data_utils import split_data, clean_text
-from src.solution_evaluates import evaluate_rouge, evaluate_f1, evaluate_rouge_gpt
+from src.solution_evaluates import evaluate_rouge, evaluate_model, evaluate_rouge_gpt
 from src.solution_datasets import PredictWordDataset, ValuateDataset
 from src.solution_model import Predictor
 from src.solution_savepoints import save_to_file
@@ -34,8 +34,9 @@ def main():
 
     with open('data/cleaned_tweets.txt') as f:
         texts = f.read().splitlines()
-    texts= list(filter(lambda x: len(x.split()) >=4, texts))
-    texts = texts[:30000]
+    texts= list(filter(lambda x: len(x.split()) >=4, texts)) # беру твиты с длиной больше 3 слов
+    if config["text_crop"] >  0:
+        texts = texts[:config["text_crop"]]
     print(texts[:5])
 
     train_texts, test_texts = split_data(texts, train_size=0.6, test_size=0.2)
@@ -90,7 +91,7 @@ def main():
 
         train_loss /= len(train_loader)
 
-        val_loss, val_acc = evaluate_f1(model, val_loader, criterion)
+        val_loss, val_acc = evaluate_model(model, val_loader, criterion)
         print(
             f"Epoch {epoch + 1} | Train Loss: {train_loss:.3f} | Val Loss: {val_loss:.3f} | Val Accuracy: {val_acc:.2%}")
 

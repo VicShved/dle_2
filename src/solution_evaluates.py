@@ -6,7 +6,7 @@ from datasets import tqdm
 from src.solution_generates import generate
 
 
-def evaluate_f1(model, loader, criterion):
+def evaluate_model(model, loader, criterion):
     model.eval()
     correct, total = 0, 0
     sum_loss = 0
