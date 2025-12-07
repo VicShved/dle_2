@@ -1,17 +1,16 @@
 import torch
-from attr.validators import max_len
-from rouge import Rouge
 from torch.utils.data import DataLoader
 from datasets import tqdm
 from src.solution_generates import generate
 
 
-def evaluate_model(model, loader, criterion):
+def evaluate_model(model, loader, criterion, device):
     model.eval()
     correct, total = 0, 0
     sum_loss = 0
     with torch.no_grad():
         for x_batch, y_batch in loader:
+            x_batch, y_batch = x_batch.to(device), y_batch.to(device)
             x_output = model(x_batch)
             loss = criterion(x_output, y_batch)
             preds = torch.argmax(x_output, dim=1)
@@ -20,14 +19,14 @@ def evaluate_model(model, loader, criterion):
             sum_loss += loss.item()
     return sum_loss / len(loader), correct / total
 
-def evaluate_rouge(model, loader: DataLoader, tokenizer, rouge):
+def evaluate_rouge(model, loader: DataLoader, tokenizer, rouge, device):
     model.eval()
     results_x = []
     results_y = []
     with torch.no_grad():
         for x_batch, y_batch in tqdm(loader):
             for i in range(len(x_batch)):
-                x_output = generate(model, init_text=x_batch[i], tokenizer=tokenizer, max_len=(len(x_batch[i].split()) + len(y_batch[i].split())))
+                x_output = generate(model, init_text=x_batch[i], tokenizer=tokenizer, max_len=(len(x_batch[i].split()) + len(y_batch[i].split())), device=device)
                 x_arr= x_output.split()[len(x_batch[i].split()):]
                 results_x.append(" ".join(x_arr) if len(x_arr) >= 1 else " ")
                 results_y.append(y_batch[i])

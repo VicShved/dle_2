@@ -91,17 +91,17 @@ def main():
 
         train_loss /= len(train_loader)
 
-        val_loss, val_acc = evaluate_model(model, val_loader, criterion)
+        val_loss, val_acc = evaluate_model(model, val_loader, criterion, device)
         print(
             f"Epoch {epoch + 1} | Train Loss: {train_loss:.3f} | Val Loss: {val_loss:.3f} | Val Accuracy: {val_acc:.2%}")
 
         save_to_file(model=model, optimizer=optimizer, epoch=epoch, loss=val_loss)
 
 
-        eval_res = evaluate_rouge(model, test_loader, tokenizer,rouge)
+        eval_res = evaluate_rouge(model, test_loader, tokenizer,rouge, device=device)
         print(f"epoch {epoch + 1} rouge=", eval_res)
 
-        generated_line = generate(model, "this is first my next word prediction", tokenizer, max_len=10)
+        generated_line = generate(model, "this is first my next word prediction", tokenizer, max_len=10, device=device)
         print("generated_line=", generated_line)
 
     tr_model = AutoModelForCausalLM.from_pretrained(model_name)

@@ -7,7 +7,7 @@ def save_to_file(model, optimizer, epoch, loss,) -> str:
         "optimizer_state": optimizer.state_dict(),
         "loss": loss,
     }
-    pth = f"savepoints/savepoint{str(epoch)}.pth"
+    pth = "savepoints/savepoint.pth"
     torch.save(state, pth)
     return pth
 
